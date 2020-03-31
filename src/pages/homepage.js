@@ -1,114 +1,47 @@
 import React from "react";
-import { Link } from "react-router-dom";
-import {
-  Grid,
-  Card,
-  CardHeader,
-  CardMedia,
-  CardActions,
-  Button
-} from "@material-ui/core";
-import { MdFavorite } from "react-icons/md";
-
+import InfiniteScroll from 'react-infinite-scroller';
 import Layout from "../components/layout";
+import ListItem from "./listItem";
 
 class Homepage extends React.Component {
   state = {
-    images: []
+    images: [],
+    hasMore: true
   };
 
-  likeImage = () => {};
+  likeImage = (item) => {
+    fetch(`${item.url}/info`)
+      .then(res => res.json())
+      .then(json => console.log(json))
+  };
+
+  loadItems = page => {
+    fetch(`https://picsum.photos/v2/list?page=${page}&limit=10`)
+      .then(res => res.json())
+      .then(json => this.setState({ images: [...this.state.images, ...json] }))
+      .catch(() => this.setState({ hasMore: false }));
+    return this.state.images;
+  }
 
   render() {
+    const items = [];
+    this.state.images.map(item => {
+        items.push(
+          <ListItem key={item.id} item={item} onClick={() => this.likeImage(item)}/>
+        );
+    });
+
     return (
       <Layout>
-        <Grid container spacing={2}>
-          <Grid item xs={2}>
-            <Card>
-              <CardHeader title={<Link to="/">Author of image</Link>} />
-              <Link to="/">
-                <CardMedia
-                  style={{ paddingTop: '56.25%' }}
-                  image="https://images.pexels.com/photos/45201/kitty-cat-kitten-pet-45201.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"
-                  title="Author"
-                />
-              </Link>
-              <CardActions disableSpacing>
-                <Button>
-                  <MdFavorite /> 0
-                </Button>
-              </CardActions>
-            </Card>
-          </Grid>
-          <Grid item xs={2}>
-            <Card>
-              <CardHeader title={<Link to="/">Author of image</Link>} />
-              <Link to="/">
-                <CardMedia
-                  style={{ paddingTop: '56.25%' }}
-                  image="https://images.pexels.com/photos/45201/kitty-cat-kitten-pet-45201.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"
-                  title="Author"
-                />
-              </Link>
-              <CardActions disableSpacing>
-                <Button>
-                  <MdFavorite /> 0
-                </Button>
-              </CardActions>
-            </Card>
-          </Grid>
-          <Grid item xs={2}>
-            <Card>
-              <CardHeader title={<Link to="/">Author of image</Link>} />
-              <Link to="/">
-                <CardMedia
-                  style={{ paddingTop: '56.25%' }}
-                  image="https://images.pexels.com/photos/45201/kitty-cat-kitten-pet-45201.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"
-                  title="Author"
-                />
-              </Link>
-              <CardActions disableSpacing>
-                <Button>
-                  <MdFavorite /> 0
-                </Button>
-              </CardActions>
-            </Card>
-          </Grid>
-          <Grid item xs={2}>
-            <Card>
-              <CardHeader title={<Link to="/">Author of image</Link>} />
-              <Link to="/">
-                <CardMedia
-                  style={{ paddingTop: '56.25%' }}
-                  image="https://images.pexels.com/photos/45201/kitty-cat-kitten-pet-45201.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"
-                  title="Author"
-                />
-              </Link>
-              <CardActions disableSpacing>
-                <Button>
-                  <MdFavorite /> 0
-                </Button>
-              </CardActions>
-            </Card>
-          </Grid>
-          <Grid item xs={2}>
-            <Card>
-              <CardHeader title={<Link to="/">Author of image</Link>} />
-              <Link to="/">
-                <CardMedia
-                  style={{ paddingTop: '56.25%' }}
-                  image="https://images.pexels.com/photos/45201/kitty-cat-kitten-pet-45201.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"
-                  title="Author"
-                />
-              </Link>
-              <CardActions disableSpacing>
-                <Button>
-                  <MdFavorite /> 0
-                </Button>
-              </CardActions>
-            </Card>
-          </Grid>
-        </Grid>
+        <InfiniteScroll
+          className='infinit-scroll'
+          pageStart={0}
+          loadMore={this.loadItems.bind(this)}
+          hasMore={this.state.hasMore}
+          loader={<div className="loader" key={0}></div>}
+        >
+          {items}
+        </InfiniteScroll>
       </Layout>
     );
   }

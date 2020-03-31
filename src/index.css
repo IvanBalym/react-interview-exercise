@@ -1,3 +1,52 @@
 html, body {
     font-family: Khand;
 }
+
+.infinit-scroll {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.infinit-item {
+    flex: 1 0 25%;
+    margin: 5px;
+    max-width: 33%;
+}
+
+.infinit-item-card-wrapper {
+    width: 100%;
+}
+
+.infinit-item-card {
+    position: relative;
+}
+
+.infinit-item-card .infinit-item-like {
+    display: none;
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    background: #ffffff8c;
+}
+
+.infinit-item-author-name {
+    display: none;
+    position: absolute;
+    padding: 5px;
+    background: #ffffff8c;
+    border-radius: 5px;
+    margin: 5px;
+    cursor: pointer;
+}
+
+.infinit-item-card:hover .infinit-item-like, .infinit-item-card:hover .infinit-item-author-name{
+    display: block;
+}
+
+.info-image-zoom-in:hover {
+    cursor: zoom-in;
+}
+
+.info-image-zoom-out:hover {
+    cursor: zoom-out;
+}
